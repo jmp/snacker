@@ -4,8 +4,18 @@ A small time tracker written in Java. It is currently very limited,
 but can do basic time tracking of tasks and export the results into
 a CSV file.
 
-## How to use
+## Compiling
 
-Compile it with `javac Snacker.java Controller.java`.
+First, compile it with `javac`:
 
-You can then run it with `java Snacker`.
+    javac *.java
+
+Then, create an executable JAR:
+
+    jar -cfe snacker.jar Snacker *.class main.fxml style.css
+
+## Usage
+
+Run the executable JAR:
+
+    java -jar snacker.jar 
