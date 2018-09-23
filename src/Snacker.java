@@ -4,6 +4,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main class for the time tracker containing the entry point.
+ */
 public class Snacker extends Application {
     private static final String TITLE = "Snacker";
     private static final String MAIN_FXML = "main.fxml";

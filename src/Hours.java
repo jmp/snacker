@@ -1,5 +1,11 @@
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Time tracking entry.
+ *
+ * It consists of a start time, end time, and the task name,
+ * each represented as strings.
+ */
 @SuppressWarnings("WeakerAccess")
 public class Hours {
     private SimpleStringProperty startTime;

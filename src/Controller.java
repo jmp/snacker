@@ -26,6 +26,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the JavaFX components.
+ *
+ * Most of the application logic happens here.
+ */
 public class Controller implements Initializable {
     private static final String CSV_SEPARATOR = ";";
     private static final String NEW_TASK_NAME = "New task";
@@ -51,6 +56,9 @@ public class Controller implements Initializable {
         initializeSelectionModel();
     }
 
+    /**
+     * Create and set a context menu for the hours table.
+     */
     private void createContextMenu() {
         final MenuItem removeItem = new MenuItem("Remove");
         removeItem.setOnAction((ActionEvent event) -> removeSelectedHours());
@@ -59,16 +67,30 @@ public class Controller implements Initializable {
         hoursTable.setContextMenu(menu);
     }
 
+    /**
+     * Set the multiselection mode for the hours table.
+     */
     private void initializeSelectionModel() {
         hoursTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    /**
+     * Handle start button click event.
+     */
     public void onStartClick() {
         updateLastTaskEndTime();
         startTask();
         editLastTask();
     }
 
+    /**
+     * Start tracking a new task.
+     *
+     * This inserts a new row to the hours table with the current time and a task name.
+     * The task name is by default the same as the previous task name. If no previous
+     * tasks exist, then it will be set to a dummy name. The end time of the new task
+     * will be empty by default.
+     */
     private void startTask() {
         final String startTime = getCurrentTimeAsString();
         final String taskName = getLastTaskName();
@@ -78,15 +100,20 @@ public class Controller implements Initializable {
         isTrackingStarted = true;
     }
 
+    /**
+     * Stop tracking the current task.
+     *
+     * This will update the end time of the current task to the current time and stop tracking.
+     */
     private void stopTask() {
-        final ObservableList<Hours> data = hoursTable.getItems();
-        final int lastIndex = data.size() - 1;
-        Hours lastHours = data.get(lastIndex);
-        lastHours.setEndTime(getCurrentTimeAsString());
-        data.set(lastIndex, lastHours);
+        updateLastTaskEndTime();
         isTrackingStarted = false;
     }
 
+    /**
+     * Returns the name of the last task.
+     * @return the last task name as a String.
+     */
     private String getLastTaskName() {
         final ObservableList<Hours> data = hoursTable.getItems();
         if (!data.isEmpty()) {
@@ -95,18 +122,24 @@ public class Controller implements Initializable {
         return NEW_TASK_NAME;
     }
 
+    /**
+     * Sets the end time of the last task row to the current time.
+     */
     private void updateLastTaskEndTime() {
         final ObservableList<Hours> data = hoursTable.getItems();
-        final String currentTime = getCurrentTimeAsString();
         if (!data.isEmpty()) {
             final int lastIndex = data.size() - 1;
             final Hours lastHours = data.get(lastIndex);
             if (isTrackingStarted) {
-                data.set(lastIndex, new Hours(lastHours.getStartTime(), currentTime, lastHours.getTask()));
+                lastHours.setEndTime(getCurrentTimeAsString());
+                data.set(lastIndex, lastHours);
             }
         }
     }
 
+    /**
+     * Focus the last item and and activate its task cell for editing.
+     */
     private void editLastTask() {
         new Thread(() -> {
             try {
@@ -123,11 +156,18 @@ public class Controller implements Initializable {
         }).start();
     }
 
+    /**
+     * Stop button click handler.
+     */
     public void onStopClick() {
         stopTask();
         resetButtonStates();
     }
 
+    /**
+     * Export button click handler.
+     * @param event the event triggered when the button was clicked
+     */
     public void onExportClick(ActionEvent event) {
         final Window window = ((Node) event.getTarget()).getScene().getWindow();
         final File file = getFileChooser().showSaveDialog(window);
@@ -136,18 +176,34 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Handler for start time commit after editing.
+     * @param event event for editing the table cell
+     */
     public void onStartTimeEditCommit(TableColumn.CellEditEvent<Hours, String> event) {
         event.getRowValue().setStartTime(event.getNewValue());
     }
 
+    /**
+     * Handler for end time commit after editing.
+     * @param event event for editing the table cell
+     */
     public void onEndTimeEditCommit(TableColumn.CellEditEvent<Hours, String> event) {
         event.getRowValue().setEndTime(event.getNewValue());
     }
 
+    /**
+     * Handler for task name commit after editing.
+     * @param event event for editing the table cell
+     */
     public void onTaskEditCommit(TableColumn.CellEditEvent<Hours, String> event) {
         event.getRowValue().setTask(event.getNewValue());
     }
 
+    /**
+     * Key press handler.
+     * @param keyEvent event for the key press
+     */
     public void onKeyPressed(KeyEvent keyEvent) {
         final ObservableList<Hours> items = hoursTable.getSelectionModel().getSelectedItems();
         final boolean isDeletePressed = keyEvent.getCode().equals(KeyCode.DELETE);
@@ -156,6 +212,10 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Export the current hours into the given file.
+     * @param file the file to export to
+     */
     private void exportToFile(File file) {
         ObservableList<Hours> allItems = hoursTable.getItems();
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
@@ -167,12 +227,24 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Returns the current time.
+     * @return current time as a String
+     */
     private String getCurrentTimeAsString() {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(new Date().getTime());
         return new SimpleDateFormat("HH:mm:ss").format(calendar.getTime());
     }
 
+    /**
+     * Returns a new FileChooser object for choosing a file for export.
+     *
+     * If a file chooser does not exist yet, it will be created.
+     * Otherwise the existing one will be returned.
+     *
+     * @return a FileChooser object
+     */
     private static FileChooser getFileChooser() {
         if (fileChooser != null) {
             return fileChooser;
@@ -181,6 +253,10 @@ public class Controller implements Initializable {
         return fileChooser;
     }
 
+    /**
+     * Creates a new FileChooser object for choosing a file for export.
+     * @return a newly created FileChooser object
+     */
     private static FileChooser createFileChooser() {
         FileChooser fileChooser = new FileChooser();
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
@@ -191,6 +267,9 @@ public class Controller implements Initializable {
         return fileChooser;
     }
 
+    /**
+     * Removes the current selection from the hours.
+     */
     private void removeSelectedHours() {
         final ObservableList<Hours> itemsToDelete = hoursTable.getSelectionModel().getSelectedItems();
         final ObservableList<Hours> allItems = hoursTable.getItems();
@@ -202,6 +281,9 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Returns buttons (texts and disabled status) to their initial states.
+     */
     private void resetButtonStates() {
         startButton.setText(START_BUTTON_TEXT);
         startButton.setDisable(false);
