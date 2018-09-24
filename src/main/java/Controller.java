@@ -1,5 +1,4 @@
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -108,7 +108,7 @@ public class Controller implements Initializable {
      * @return the last task name as a String.
      */
     private String getLastTaskName() {
-        final ObservableList<Hours> data = hoursTable.getItems();
+        final List<Hours> data = hoursTable.getItems();
         if (!data.isEmpty()) {
             return data.get(data.size() - 1).getTask();
         }
@@ -119,7 +119,7 @@ public class Controller implements Initializable {
      * Sets the end time of the last task row to the current time.
      */
     private void updateLastTaskEndTime() {
-        final ObservableList<Hours> data = hoursTable.getItems();
+        final List<Hours> data = hoursTable.getItems();
         if (!data.isEmpty()) {
             final int lastIndex = data.size() - 1;
             final Hours lastHours = data.get(lastIndex);
@@ -202,7 +202,7 @@ public class Controller implements Initializable {
      * @param keyEvent event for the key press
      */
     public void onKeyPressed(KeyEvent keyEvent) {
-        final ObservableList<Hours> items = hoursTable.getSelectionModel().getSelectedItems();
+        final List<Hours> items = hoursTable.getSelectionModel().getSelectedItems();
         final boolean isDeletePressed = keyEvent.getCode().equals(KeyCode.DELETE);
         if (!items.isEmpty() && isDeletePressed) {
             removeSelectedHours();
@@ -213,8 +213,8 @@ public class Controller implements Initializable {
      * Removes the current selection from the hours.
      */
     private void removeSelectedHours() {
-        final ObservableList<Hours> itemsToDelete = hoursTable.getSelectionModel().getSelectedItems();
-        final ObservableList<Hours> allItems = hoursTable.getItems();
+        final List<Hours> itemsToDelete = hoursTable.getSelectionModel().getSelectedItems();
+        final List<Hours> allItems = hoursTable.getItems();
         final boolean lastDeleted = !itemsToDelete.isEmpty() && itemsToDelete.contains(allItems.get(allItems.size() - 1));
         allItems.removeAll(itemsToDelete);
         if (lastDeleted || allItems.isEmpty()) {
