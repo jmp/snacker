@@ -31,7 +31,6 @@ import java.util.ResourceBundle;
  * Most of the application logic happens here.
  */
 public class Controller implements Initializable {
-    private static final String CSV_SEPARATOR = ";";
     private static final String NEW_TASK_NAME = "New task";
     private static final String SWITCH_BUTTON_TEXT = "Switch";
     private static final String START_BUTTON_TEXT = "Start";
