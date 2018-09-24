@@ -8,18 +8,16 @@ a CSV file.
 
 ## Compiling
 
-First, compile it with `javac`:
+Build with Gradle:
 
-    javac *.java
+    gradle build
 
-Then, create an executable JAR:
-
-    jar -cfe snacker.jar Snacker *.class main.fxml style.css
+This creates an executable JAR at `build/libs/snacker.jar`.
 
 ## Usage
 
 Run the executable JAR:
 
-    java -jar snacker.jar 
+    java -jar snacker.jar
 
 [example]: https://raw.githubusercontent.com/jmp/snacker/master/example.gif
