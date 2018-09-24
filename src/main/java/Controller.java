@@ -19,7 +19,6 @@ import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -172,7 +171,11 @@ public class Controller implements Initializable {
         final Window window = ((Node) event.getTarget()).getScene().getWindow();
         final File file = getFileChooser().showSaveDialog(window);
         if (file != null) {
-            exportToFile(file);
+            try {
+                Export.write(new FileWriter(file), hoursTable.getItems());
+            } catch (IOException e) {
+                e.printStackTrace(); // Write failed
+            }
         }
     }
 
@@ -209,21 +212,6 @@ public class Controller implements Initializable {
         final boolean isDeletePressed = keyEvent.getCode().equals(KeyCode.DELETE);
         if (!items.isEmpty() && isDeletePressed) {
             removeSelectedHours();
-        }
-    }
-
-    /**
-     * Export the current hours into the given file.
-     * @param file the file to export to
-     */
-    private void exportToFile(File file) {
-        ObservableList<Hours> allItems = hoursTable.getItems();
-        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            for (Hours hours : allItems) {
-                writer.println(hours.getStartTime() + CSV_SEPARATOR + hours.getEndTime() + CSV_SEPARATOR + hours.getTask());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
