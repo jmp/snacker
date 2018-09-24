@@ -10,7 +10,7 @@ a CSV file.
 
 Build with Gradle:
 
-    gradle build
+    gradlew build
 
 This creates an executable JAR at `build/libs/snacker.jar`.
 
