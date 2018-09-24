@@ -1,3 +1,4 @@
+import javafx.stage.FileChooser;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
@@ -32,12 +33,20 @@ class ExportTest {
     }
 
     @Test
-    void writeBasic() {
+    void write() {
         StringWriter writer = new StringWriter();
         ArrayList<Hours> hours = new ArrayList<>();
         hours.add(new Hours("11:22:33", "11:22:44", "TASK-1"));
         hours.add(new Hours("22:33:44", "22:33:55", "TASK-2"));
         Export.write(writer, hours);
         assertEquals("11:22:33;11:22:44;TASK-1\n22:33:44;22:33:55;TASK-2\n", normalize(writer.toString()));
+    }
+
+    @Test
+    void getFileChooser() {
+        FileChooser fileChooser = Export.getFileChooser();
+        assertNotNull(fileChooser);
+        assertEquals("Export", fileChooser.getTitle());
+        assertTrue(fileChooser.getExtensionFilters().size() > 0);
     }
 }

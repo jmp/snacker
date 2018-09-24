@@ -12,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
@@ -20,9 +19,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 /**
@@ -35,7 +31,6 @@ public class Controller implements Initializable {
     private static final String SWITCH_BUTTON_TEXT = "Switch";
     private static final String START_BUTTON_TEXT = "Start";
     private static boolean isTrackingStarted = false;
-    private static FileChooser fileChooser;
 
     @FXML
     private Button startButton;
@@ -90,7 +85,7 @@ public class Controller implements Initializable {
      * will be empty by default.
      */
     private void startTask() {
-        final String startTime = getCurrentTimeAsString();
+        final String startTime = Timing.getCurrentTimeAsString();
         final String taskName = getLastTaskName();
         hoursTable.getItems().add(new Hours(startTime, "", taskName));
         startButton.setText(SWITCH_BUTTON_TEXT);
@@ -129,7 +124,7 @@ public class Controller implements Initializable {
             final int lastIndex = data.size() - 1;
             final Hours lastHours = data.get(lastIndex);
             if (isTrackingStarted) {
-                lastHours.setEndTime(getCurrentTimeAsString());
+                lastHours.setEndTime(Timing.getCurrentTimeAsString());
                 data.set(lastIndex, lastHours);
             }
         }
@@ -168,7 +163,7 @@ public class Controller implements Initializable {
      */
     public void onExportClick(ActionEvent event) {
         final Window window = ((Node) event.getTarget()).getScene().getWindow();
-        final File file = getFileChooser().showSaveDialog(window);
+        final File file = Export.getFileChooser().showSaveDialog(window);
         if (file != null) {
             try {
                 Export.write(new FileWriter(file), hoursTable.getItems());
@@ -212,46 +207,6 @@ public class Controller implements Initializable {
         if (!items.isEmpty() && isDeletePressed) {
             removeSelectedHours();
         }
-    }
-
-    /**
-     * Returns the current time.
-     * @return current time as a String
-     */
-    private String getCurrentTimeAsString() {
-        final Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(new Date().getTime());
-        return new SimpleDateFormat("HH:mm:ss").format(calendar.getTime());
-    }
-
-    /**
-     * Returns a new FileChooser object for choosing a file for export.
-     *
-     * If a file chooser does not exist yet, it will be created.
-     * Otherwise the existing one will be returned.
-     *
-     * @return a FileChooser object
-     */
-    private static FileChooser getFileChooser() {
-        if (fileChooser != null) {
-            return fileChooser;
-        }
-        fileChooser = createFileChooser();
-        return fileChooser;
-    }
-
-    /**
-     * Creates a new FileChooser object for choosing a file for export.
-     * @return a newly created FileChooser object
-     */
-    private static FileChooser createFileChooser() {
-        FileChooser fileChooser = new FileChooser();
-        ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
-        filters.add(new FileChooser.ExtensionFilter("CSV Files (*.csv)", "*.csv"));
-        filters.add(new FileChooser.ExtensionFilter("Text Documents (*.txt)", "*.txt"));
-        filters.add(new FileChooser.ExtensionFilter("All Files (*.*)", "*.*"));
-        fileChooser.setTitle("Export");
-        return fileChooser;
     }
 
     /**
