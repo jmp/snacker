@@ -1,5 +1,7 @@
 # Snacker
 
+[![Build Status](https://travis-ci.org/jmp/snacker.svg?branch=master)](https://travis-ci.org/jmp/snacker)
+
 A small time tracker written in Java. It is currently very limited,
 but can do basic time tracking of tasks and export the results into
 a CSV file.
