@@ -167,6 +167,7 @@ public class Controller implements Initializable {
         if (file != null) {
             try {
                 Export.write(new FileWriter(file), hoursTable.getItems());
+                Export.setPreviousDirectory(file.getParent());
             } catch (IOException e) {
                 e.printStackTrace(); // Write failed
             }

@@ -1,6 +1,7 @@
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.List;
@@ -9,6 +10,7 @@ public class Export {
     private static final String CSV_SEPARATOR = ";";
     private static final String FILE_CHOOSER_TITLE = "Export";
     private static FileChooser fileChooser;
+    private static String previousDirectory = System.getProperty("user.home");
 
     /**
      * Export the given hours into the given file.
@@ -43,10 +45,10 @@ public class Export {
      * @return a FileChooser object
      */
     public static FileChooser getFileChooser() {
-        if (fileChooser != null) {
-            return fileChooser;
+        if (fileChooser == null) {
+            fileChooser = createFileChooser();
         }
-        fileChooser = createFileChooser();
+        fileChooser.setInitialDirectory(new File(getPreviousDirectory()));
         return fileChooser;
     }
 
@@ -62,5 +64,21 @@ public class Export {
         filters.add(new FileChooser.ExtensionFilter("All Files (*.*)", "*.*"));
         fileChooser.setTitle(FILE_CHOOSER_TITLE);
         return fileChooser;
+    }
+
+    /**
+     * Returns the previous directory opened with the file chooser.
+     * @return previous directory as a File object
+     */
+    public static String getPreviousDirectory() {
+        return previousDirectory;
+    }
+
+    /**
+     * Sets the previous directory.
+     * @param path directory path
+     */
+    public static void setPreviousDirectory(String path) {
+        previousDirectory = path;
     }
 }

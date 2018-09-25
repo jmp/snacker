@@ -50,4 +50,17 @@ class ExportTest {
         assertEquals("Export", fileChooser.getTitle());
         assertTrue(fileChooser.getExtensionFilters().size() > 0);
     }
+
+    @Test
+    void setPreviousDirectory() {
+        assertNotEquals("test", Export.getPreviousDirectory());
+        Export.setPreviousDirectory("test");
+        assertEquals("test", Export.getPreviousDirectory());
+    }
+
+
+    @Test
+    void getPreviousDirectory() {
+        assertEquals(System.getProperty("user.home"), Export.getPreviousDirectory());
+    }
 }
