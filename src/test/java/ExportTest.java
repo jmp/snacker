@@ -46,6 +46,7 @@ class ExportTest {
     void getFileChooser() {
         FileChooser fileChooser = Export.getFileChooser();
         assertNotNull(fileChooser);
+        assertSame(fileChooser, Export.getFileChooser());
         assertEquals("Export", fileChooser.getTitle());
         assertTrue(fileChooser.getExtensionFilters().size() > 0);
     }
