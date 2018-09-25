@@ -6,11 +6,11 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.List;
 
-public class Export {
+public class Exporter {
     private static final String CSV_SEPARATOR = ";";
     private static final String FILE_CHOOSER_TITLE = "Export";
-    private static FileChooser fileChooser;
-    private static String previousDirectory = System.getProperty("user.home");
+    private FileChooser fileChooser;
+    private String previousDirectory = System.getProperty("user.home");
 
     /**
      * Export the given hours into the given file.
@@ -18,7 +18,7 @@ public class Export {
      * @param writer the writer to write to
      * @param items items to write into the file
      */
-    static void write(Writer writer, List<Hours> items) {
+    void write(Writer writer, List<Hours> items) {
         if (writer == null || items == null) {
             throw new IllegalArgumentException("Writer or items must not be null!");
         }
@@ -44,7 +44,7 @@ public class Export {
      *
      * @return a FileChooser object
      */
-    public static FileChooser getFileChooser() {
+    public FileChooser getFileChooser() {
         if (fileChooser == null) {
             fileChooser = createFileChooser();
         }
@@ -56,7 +56,7 @@ public class Export {
      * Creates a new FileChooser object for choosing a file for export.
      * @return a newly created FileChooser object
      */
-    private static FileChooser createFileChooser() {
+    private FileChooser createFileChooser() {
         FileChooser fileChooser = new FileChooser();
         ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
         filters.add(new FileChooser.ExtensionFilter("CSV Files (*.csv)", "*.csv"));
@@ -70,7 +70,7 @@ public class Export {
      * Returns the previous directory opened with the file chooser.
      * @return previous directory as a File object
      */
-    public static String getPreviousDirectory() {
+    public String getPreviousDirectory() {
         return previousDirectory;
     }
 
@@ -78,7 +78,7 @@ public class Export {
      * Sets the previous directory.
      * @param path directory path
      */
-    public static void setPreviousDirectory(String path) {
+    public void setPreviousDirectory(String path) {
         previousDirectory = path;
     }
 }

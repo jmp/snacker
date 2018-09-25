@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ExportTest {
+class ExporterTest {
     private static String normalize(String string) {
         return string.replaceAll("\\r\\n", "\n")
                      .replaceAll("\\r", "\n");
@@ -15,20 +15,20 @@ class ExportTest {
     @Test
     void writeNullWriter() {
         StringWriter writer = new StringWriter();
-        assertThrows(IllegalArgumentException.class, () -> Export.write(writer, null));
+        assertThrows(IllegalArgumentException.class, () -> new Exporter().write(writer, null));
     }
 
     @Test
     void writeNullItems() {
         ArrayList<Hours> hours = new ArrayList<>();
-        assertThrows(IllegalArgumentException.class, () -> Export.write(null, hours));
+        assertThrows(IllegalArgumentException.class, () -> new Exporter().write(null, hours));
     }
 
     @Test
     void writeEmptyItems() {
         StringWriter writer = new StringWriter();
         ArrayList<Hours> hours = new ArrayList<>();
-        Export.write(writer, hours);
+        new Exporter().write(writer, hours);
         assertEquals("", normalize(writer.toString()));
     }
 
@@ -38,29 +38,30 @@ class ExportTest {
         ArrayList<Hours> hours = new ArrayList<>();
         hours.add(new Hours("11:22:33", "11:22:44", "TASK-1"));
         hours.add(new Hours("22:33:44", "22:33:55", "TASK-2"));
-        Export.write(writer, hours);
+        new Exporter().write(writer, hours);
         assertEquals("11:22:33;11:22:44;TASK-1\n22:33:44;22:33:55;TASK-2\n", normalize(writer.toString()));
     }
 
     @Test
     void getFileChooser() {
-        FileChooser fileChooser = Export.getFileChooser();
+        Exporter exporter = new Exporter();
+        FileChooser fileChooser = exporter.getFileChooser();
         assertNotNull(fileChooser);
-        assertSame(fileChooser, Export.getFileChooser());
+        assertSame(fileChooser, exporter.getFileChooser());
         assertEquals("Export", fileChooser.getTitle());
         assertTrue(fileChooser.getExtensionFilters().size() > 0);
     }
 
     @Test
-    void setPreviousDirectory() {
-        assertNotEquals("test", Export.getPreviousDirectory());
-        Export.setPreviousDirectory("test");
-        assertEquals("test", Export.getPreviousDirectory());
+    void getPreviousDirectory() {
+        assertEquals(System.getProperty("user.home"), new Exporter().getPreviousDirectory());
     }
 
-
     @Test
-    void getPreviousDirectory() {
-        assertEquals(System.getProperty("user.home"), Export.getPreviousDirectory());
+    void setPreviousDirectory() {
+        Exporter exporter = new Exporter();
+        assertNotEquals("test", exporter.getPreviousDirectory());
+        exporter.setPreviousDirectory("test");
+        assertEquals("test", exporter.getPreviousDirectory());
     }
 }

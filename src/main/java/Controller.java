@@ -31,6 +31,7 @@ public class Controller implements Initializable {
     private static final String SWITCH_BUTTON_TEXT = "Switch";
     private static final String START_BUTTON_TEXT = "Start";
     private static boolean isTrackingStarted = false;
+    private static final Exporter exporter = new Exporter();
 
     @FXML
     private Button startButton;
@@ -163,11 +164,11 @@ public class Controller implements Initializable {
      */
     public void onExportClick(ActionEvent event) {
         final Window window = ((Node) event.getTarget()).getScene().getWindow();
-        final File file = Export.getFileChooser().showSaveDialog(window);
+        final File file = exporter.getFileChooser().showSaveDialog(window);
         if (file != null) {
             try {
-                Export.write(new FileWriter(file), hoursTable.getItems());
-                Export.setPreviousDirectory(file.getParent());
+                exporter.write(new FileWriter(file), hoursTable.getItems());
+                exporter.setPreviousDirectory(file.getParent());
             } catch (IOException e) {
                 e.printStackTrace(); // Write failed
             }
